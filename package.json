@@ -1,5 +1,10 @@
 {
   "name": "spaceships",
+  "description": "Spaceships! In space! And shooty fun gun!",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SomeKittens/SPACESHIPS"
+  },
   "main": "app.js",
   "author": "Randall Koutnik <rkoutnik@gmail.com>",
   "license": "MIT",
