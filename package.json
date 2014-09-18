@@ -2,5 +2,11 @@
   "name": "spaceships",
   "main": "app.js",
   "author": "Randall Koutnik <rkoutnik@gmail.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "scripts": {
+    "start": "nodemon app.js"
+  },
+  "dependencies": {
+    "express.io": "^1.1.13"
+  }
 }

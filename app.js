@@ -1,13 +1,18 @@
-var io = require('sandbox-io');
+'use strict';
 
-io.on('connection', function(socket) {
-  socket.on('init', function (data) {
-    socket.broadcast.emit('join', data);
-  });
+var express = require('express.io');
+var app = express();
+var path = require('path');
+app.http().io();
 
-  ['exploded', 'reset', 'heartbeat', 'leave'].forEach(function (e) {
-    socket.on(e, function (data) {
-      socket.broadcast.emit(e, data);
-    });
+app.use(express.static(__dirname));
+
+['join', 'exploded', 'reset', 'heartbeat', 'leave'].forEach(function (e) {
+  app.io.route(e, function (req) {
+    req.io.broadcast(e, req.data);
   });
 });
+
+app.listen(8080);
+
+console.log('running');

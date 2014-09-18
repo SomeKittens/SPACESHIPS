@@ -14,7 +14,7 @@ function Player() {
   this.exploded = false;
 
   this.img = new Image();
-  this.img.src = '/img/player.png';
+  this.img.src = 'http://retroships.com/generate.png?&size=4&cB=300&seed=' + name;
 }
 
 inherits(Player, CanvasItem);
@@ -113,7 +113,7 @@ function FBPlayer (params) {
   this.exploded = false;
 
   this.img = new Image();
-  this.img.src = '/img/enemy.png';
+  this.img.src = 'http://retroships.com/generate.png?&size=4&seed=' + this.name;
 
   this.lastUpdated = new Date();
 };

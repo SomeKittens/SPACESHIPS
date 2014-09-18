@@ -1,7 +1,7 @@
 'use strict';
 
 var name = ('kittens' + Math.random()).replace('.','');
-var socket = io(document.location.href);
+var socket = io.connect(document.location.href);
 
 var canvas = document.getElementById('canvas'),
   height = canvas.height = 700,
@@ -36,7 +36,7 @@ document.body.addEventListener('keyup', function(e) {
   keys[e.keyCode] = false;
 });
 
-socket.emit('init', {
+socket.emit('join', {
   x: thisPlayer.x,
   y: thisPlayer.y,
   dx: thisPlayer.dx,
