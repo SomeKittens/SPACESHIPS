@@ -84,7 +84,8 @@ setInterval(function () {
     dy: thisPlayer.dy,
     angle: thisPlayer.angle,
     firing: !!keys[32],
-    name: name
+    name: name,
+    exploded: thisPlayer.exploded
   });
 }, 1000 / 30);
 
@@ -129,6 +130,7 @@ socket.on('heartbeat', function (data) {
   plr.dy = data.dy;
   plr.angle = data.angle;
   plr.firing = data.firing;
+  plr.exploded = data.exploded;
 });
 socket.on('child_removed', function (data) {
   fbPlayers[data.name] = null;

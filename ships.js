@@ -111,7 +111,7 @@ function FBPlayer (params) {
   this.h = this.w = 36;
 
   this.connected = true;
-  this.exploded = false;
+  this.exploded = !!params.exploded;
 
   this.img = new Image();
   this.img.src = 'http://retroships.com/generate.png?&size=3&seed=' + this.name;
