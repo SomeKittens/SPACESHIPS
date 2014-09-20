@@ -55,7 +55,7 @@ app.io.route('join', function(req) {
 });
 
 app.io.route('heartbeat', function(req) {
-  req.io.broadcast('join', req.data);
+  req.io.broadcast('heartbeat', req.data);
   players[req.data.name] = req.data;
 
   // Collision check

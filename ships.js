@@ -150,6 +150,7 @@ FBPlayer.prototype.render = Player.prototype.render = function () {
 };
 FBPlayer.prototype.reset = Player.prototype.reset = function (params) {
   if (!this.exploded) { return; }
+
   // Crummy workaround
   if (!params) {
     // We're a player

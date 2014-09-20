@@ -108,7 +108,7 @@ socket.on('exploded', function (data) {
     return;
   }
   var plr = fbPlayers[data.name];
-  if (plr) {
+  if (plr && !plr.exploded) {
     // Handle them exploding
     boom(plr.x, plr.y, plr.dx, plr.dy);
     plr.exploded = true;
@@ -132,7 +132,7 @@ socket.on('heartbeat', function (data) {
   plr.firing = data.firing;
   plr.exploded = data.exploded;
 });
-socket.on('child_removed', function (data) {
+socket.on('leave', function(data) {
   fbPlayers[data.name] = null;
 });
 
