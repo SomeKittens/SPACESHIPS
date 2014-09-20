@@ -13,6 +13,8 @@ function Player() {
   this.angle = 0;
   this.exploded = false;
 
+  this.name = name;
+
   this.img = new Image();
   this.img.src = 'http://retroships.com/generate.png?&size=3&cB=300&seed=' + name;
 }
@@ -133,6 +135,10 @@ FBPlayer.prototype.destroyed = function () {
 
 
 FBPlayer.prototype.render = Player.prototype.render = function () {
+  context.fillStyle = 'white';
+  context.font = '12px Arial';
+  var w = context.measureText(this.name).width;
+  context.fillText(this.name, this.x - (w/2), this.y + this.h);
   if (this.exploded) { return; }
   context.save();
   context.translate(this.x, this.y);

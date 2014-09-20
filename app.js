@@ -13,10 +13,6 @@ var consts = {
 
 var players = {};
 
-function within(x, y, within) {
-  return x + within >= y && x - within <= y;
-}
-
 ['exploded', 'reset', 'leave'].forEach(function (e) {
   app.io.route(e, function (req) {
     req.io.broadcast(e, req.data);
@@ -36,6 +32,7 @@ app.io.route('heartbeat', function(req) {
   Object.keys(players).forEach(function(key) {
     if (key === req.data.name) { return; }
     var otherPlayer = players[key];
+    if (otherPlayer.exploded) { return; }
     var x = otherPlayer.x - req.data.x,
         y = otherPlayer.y - req.data.y,
         distance = Math.sqrt(x*x + y*y);

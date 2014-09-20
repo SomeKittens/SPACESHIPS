@@ -1,6 +1,6 @@
 'use strict';
 
-var name = ('kittens' + Math.random()).replace('.','');
+var name = prompt('What is your name, pilot?');
 var socket = io.connect(document.location.href);
 
 var canvas = document.getElementById('canvas'),
