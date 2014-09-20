@@ -2,7 +2,6 @@
 
 var express = require('express.io');
 var app = express();
-var path = require('path');
 app.http().io();
 
 app.use(express.static(__dirname));
@@ -11,9 +10,37 @@ var consts = {
   shipSize: 36
 };
 
-var players = {};
+function Scores () {
+  this.scores = {};
+}
 
-['exploded', 'reset', 'leave'].forEach(function (e) {
+Scores.prototype.addPlayer = function(player) {
+  this.scores[player] = 0;
+};
+
+Scores.prototype.scorePoint = function(player) {
+  this.scores[player]++;
+};
+
+Scores.prototype.toSortedArray = function () {
+  var arr = [];
+  var self = this;
+  Object.keys(this.scores).forEach(function (player) {
+    arr.push({
+      name: player,
+      score: self.scores[player]
+    });
+  });
+  arr.sort(function(a,b) {
+    return b.score - a.score;
+  });
+  return arr;
+};
+
+var players = {};
+var scores = new Scores();
+
+['reset', 'leave'].forEach(function (e) {
   app.io.route(e, function (req) {
     req.io.broadcast(e, req.data);
   });
@@ -22,6 +49,9 @@ var players = {};
 app.io.route('join', function(req) {
   req.io.broadcast('join', req.data);
   players[req.data.name] = req.data;
+  scores.addPlayer(req.data.name);
+  req.io.emit('score', scores.toSortedArray());
+  req.io.broadcast('score', scores.toSortedArray());
 });
 
 app.io.route('heartbeat', function(req) {
@@ -38,10 +68,27 @@ app.io.route('heartbeat', function(req) {
         distance = Math.sqrt(x*x + y*y);
     if (distance <= consts.shipSize) {
       console.log(req.data.name, ' collided with ', key);
-      app.io.broadcast('exploded', {name: key});
-      app.io.broadcast('exploded', {name: req.data.name});
+      app.io.broadcast('exploded', {
+        name: key
+      });
+      app.io.broadcast('exploded', {
+        name: req.data.name
+      });
     }
   });
+});
+
+app.io.route('exploded', function(req) {
+  if (players[req.data.name].exploded) { return; }
+  players[req.data.name].exploded = true;
+
+  scores.scorePoint(req.data.killer);
+  console.log(scores.toSortedArray());
+  req.io.broadcast('score', scores.toSortedArray());
+  req.io.emit('score', scores.toSortedArray());
+
+  req.io.broadcast('exploded', req.data);
+  req.io.emit('exploded', req.data);
 });
 
 app.listen(8080);

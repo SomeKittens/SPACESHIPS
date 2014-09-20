@@ -79,7 +79,6 @@ Player.prototype.destroyed = function () {
 Player.prototype.explode = function () {
   if (!this.exploded) {
     this.exploded = true;
-    socket.emit('exploded', {name: name});
     boom(this.x, this.y, this.dx, this.dy);
   }
 };
@@ -123,7 +122,10 @@ inherits(FBPlayer, CanvasItem);
 
 FBPlayer.prototype.update = function () {
   if (playerBullets.colliding(this.x, this.y)) {
-    socket.emit('exploded', {name: this.name});
+    socket.emit('exploded', {
+      name: this.name,
+      killer: name
+    });
   }
   if (this.firing && !this.exploded) {
     this.fire();

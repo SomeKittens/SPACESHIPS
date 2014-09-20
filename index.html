@@ -12,6 +12,12 @@
     #canvas {
       position: absolute;
       background-color: black;
+      margin-top: 10px;
+      margin-left: 10px;
+    }
+    table {
+      float: right;
+      margin-top: 50px;
     }
   </style>
   <!--
@@ -25,6 +31,15 @@
 </head>
 <body>
   <canvas id="canvas"></canvas>
+  <table>
+    <thead>
+      <tr>
+        <td>Name</td>
+        <td>Score</td>
+      </tr>
+    </thead>
+    <tbody id="scoreboard"></tbody>
+  </table>
   <script src="/socket.io/socket.io.js"></script>
   <script type="text/javascript" src="lib/dat.gui.min.js"></script>
   <!--<script type="text/javascript" src="spaceships.min.js"></script>-->
@@ -33,6 +48,7 @@
   <script type="text/javascript" src="ships.js"></script>
   <script type="text/javascript" src="stars.js"></script>
   <script type="text/javascript" src="main.js"></script>
+  <script type="text/javascript" src="scoreboard.js"></script>
   <script type="text/javascript" src="dat.spaceships.js"></script>
 </body>
 </html>

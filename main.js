@@ -5,7 +5,7 @@ var socket = io.connect(document.location.href);
 
 var canvas = document.getElementById('canvas'),
   height = canvas.height = 700,
-  width = canvas.width = 1280,
+  width = canvas.width = 960,
   context = canvas.getContext('2d'),
   dtime = Date.now(),
   timing = 1000,
