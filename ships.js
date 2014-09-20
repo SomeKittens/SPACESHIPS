@@ -3,7 +3,7 @@ function Player() {
   this.y = Math.random() * height| 0;
 
   // Image h/w
-  this.h = this.w = 48;
+  this.h = this.w = 36;
 
   this.dx = 0;
   this.dy = 0;
@@ -14,7 +14,7 @@ function Player() {
   this.exploded = false;
 
   this.img = new Image();
-  this.img.src = 'http://retroships.com/generate.png?&size=4&cB=300&seed=' + name;
+  this.img.src = 'http://retroships.com/generate.png?&size=3&cB=300&seed=' + name;
 }
 
 inherits(Player, CanvasItem);
@@ -95,7 +95,7 @@ Player.prototype.fire = function () {
     dy: Math.cos(radians) * 10,
     c: 'rgba(0,24,234,1)',
     r: 7,
-    decay: 0.04
+    decay: 0.06
   });
 }
 
@@ -106,14 +106,13 @@ function FBPlayer (params) {
 
   this.name = params.name;
 
-  this.h = 55;
-  this.w = 50;
+  this.h = this.w = 36;
 
   this.connected = true;
   this.exploded = false;
 
   this.img = new Image();
-  this.img.src = 'http://retroships.com/generate.png?&size=4&seed=' + this.name;
+  this.img.src = 'http://retroships.com/generate.png?&size=3&seed=' + this.name;
 
   this.lastUpdated = new Date();
 };
@@ -164,6 +163,6 @@ FBPlayer.prototype.fire = function () {
     dy: Math.cos(radians) * 10,
     c: 'rgba(287,3,24,1)',
     r: 7,
-    decay: 0.04
+    decay: 0.06
   });
 };
