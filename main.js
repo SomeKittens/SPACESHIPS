@@ -73,7 +73,7 @@ setInterval(function() {
   particles.gc();
   playerBullets.gc();
   players.gc();
-}, 1000 / 60);
+}, 16);
 
 setInterval(function () {
   socket.emit('heartbeat', {

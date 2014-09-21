@@ -12,6 +12,9 @@ function Player() {
   this.thrust = 0.1;
   this.angle = 0;
   this.exploded = false;
+  // Fires a bullet every fireRate millis
+  this.fireRate = 300;
+  this.lastFire = Date.now();
 
   this.name = name;
 
@@ -86,6 +89,8 @@ Player.prototype.explode = function () {
   }
 };
 Player.prototype.fire = function () {
+  if (Date.now() - this.fireRate < this.lastFire) { return; }
+  this.lastFire = Date.now();
   var radians = (this.angle + 0.055) * (180/Math.PI);
 
   var xx = this.x + (this.w/2 * Math.cos(-(this.angle + 0.0275) * (180/Math.PI)));
@@ -99,7 +104,7 @@ Player.prototype.fire = function () {
     dy: Math.cos(radians) * 10,
     c: 'rgba(0,24,234,1)',
     r: 7,
-    decay: 0.06
+    decay: 0.04
   });
 }
 
