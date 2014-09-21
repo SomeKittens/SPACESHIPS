@@ -3,7 +3,7 @@
 function Particle(props) {
   this.x = props.x;
   this.y = props.y;
-  var r = props.r || Math.random() * 9 + 1 | 0;
+  var r = this.r = props.r || Math.random() * 9 + 1 | 0;
 
   this.img = (function() {
     var canvas = document.createElement('canvas'),
@@ -34,15 +34,15 @@ Particle.prototype.update = function() {
   this.life -= this.decay;
 
   // Check for wraparound
-  if (this.x < 0) {
-    this.x = width;
-  } else if (this.x > width) {
-    this.x = 0;
+  if (this.x < -(this.r/2)) {
+    this.x = width + (this.r/2);
+  } else if (this.x > width + (this.r/2)) {
+    this.x = -(this.r/2);
   }
-  if (this.y < 0) {
-    this.y = height;
-  } else if (this.y > height) {
-    this.y = 0;
+  if (this.y < -(this.r/2)) {
+    this.y = height + (this.r/2);
+  } else if (this.y > height + (this.r/2)) {
+    this.y = -(this.r/2);
   }
 };
 Particle.prototype.render = function() {

@@ -61,15 +61,15 @@ Player.prototype.update = function () {
   this.y += this.dy;
 
   // Check for wraparound
-  if (this.x < 0) {
-    this.x = width;
-  } else if (this.x > width) {
-    this.x = 0;
+  if (this.x < -(this.w/2)) {
+    this.x = width + (this.w/2);
+  } else if (this.x > width + (this.w/2)) {
+    this.x = -(this.w/2);
   }
-  if (this.y < 0) {
-    this.y = height;
-  } else if (this.y > height) {
-    this.y = 0;
+  if (this.y < -(this.h/2)) {
+    this.y = height + (this.h/2);
+  } else if (this.y > height + (this.h/2)) {
+    this.y = -(this.h/2);
   }
 
   // There's totally friction in space.
