@@ -32,6 +32,9 @@ Player.prototype.update = function () {
   if (keys[90]) {
     thisPlayer.explode();
   }
+
+  if (this.exploded) { return; }
+
   // Turns
   if (keys[39]) {
     this.angle += this.turnSpeed * -1;
