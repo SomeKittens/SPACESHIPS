@@ -68,6 +68,8 @@ app.io.route('heartbeat', function(req) {
         distance = Math.sqrt(x*x + y*y);
     if (distance <= consts.shipSize) {
       console.log(req.data.name, ' collided with ', key);
+      otherPlayer.exploded = true;
+      players[req.data.name].exploded = true;
       app.io.broadcast('exploded', {
         name: key
       });
