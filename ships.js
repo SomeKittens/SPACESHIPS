@@ -37,11 +37,11 @@ Player.prototype.update = function () {
 
   // Turns
   if (keys[39]) {
-    this.angle += this.turnSpeed * -1;
+    this.angle += -this.turnSpeed;
   }
 
   if (keys[37]) {
-    this.angle += this.turnSpeed * 1;
+    this.angle += this.turnSpeed;
   }
 
   // Math stuff to determine direction

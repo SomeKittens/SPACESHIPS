@@ -27,6 +27,10 @@ playerBullets.colliding = function (x, y) {
   return false;
 };
 
+for (var i = 0; i < 150; i++) {
+  stars.create();
+}
+
 var keys = {};
 document.body.addEventListener('keydown', function(e) {
   keys[e.keyCode] = true;
@@ -47,14 +51,18 @@ socket.emit('join', {
 });
 
 function run() {
-  var now = Date.now();
-  if (now - dtime > timing) {
-    dtime = now;
-    timing = Math.random() * 1000;
-    for (var i = 0; i < 5; i++) {
-      stars.create();
-    }
-  }
+  context.clearRect(0, 0, width, height);
+  stars.render();
+  players.render();
+  thisPlayer.render();
+  particles.render();
+  playerBullets.render();
+  context.globalAlpha = 1;
+  requestAnimationFrame(run);
+}
+
+// This will continue running onblur
+setInterval(function() {
   stars.update();
   thisPlayer.update();
   particles.update();
@@ -65,16 +73,7 @@ function run() {
   particles.gc();
   playerBullets.gc();
   players.gc();
-
-  context.clearRect(0, 0, width, height);
-  stars.render();
-  players.render();
-  thisPlayer.render();
-  particles.render();
-  playerBullets.render();
-  context.globalAlpha = 1;
-  requestAnimationFrame(run);
-}
+}, 1000 / 60);
 
 setInterval(function () {
   socket.emit('heartbeat', {

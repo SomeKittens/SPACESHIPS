@@ -62,9 +62,6 @@ CanvasCollection.prototype = {
     });
   },
   render: function () {
-    if (this.item.prototype instanceof Particle) {
-      console.log(this.items);
-    }
     for (var i = 0; i < this.items.length; i++) {
       this.items[i].render();
     }
