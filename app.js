@@ -93,6 +93,6 @@ app.io.route('exploded', function(req) {
   req.io.emit('exploded', req.data);
 });
 
-app.listen(8080);
+app.listen(process.env.PORT || 8080);
 
 console.log('running');
