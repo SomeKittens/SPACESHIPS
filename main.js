@@ -34,10 +34,12 @@ for (var i = 0; i < 150; i++) {
 var keys = {};
 document.body.addEventListener('keydown', function(e) {
   keys[e.keyCode] = true;
+  e.preventDefault();
 });
 
 document.body.addEventListener('keyup', function(e) {
   keys[e.keyCode] = false;
+  e.preventDefault();
 });
 
 document.querySelector('form').addEventListener('submit', function(e) {
