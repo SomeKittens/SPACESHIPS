@@ -12,6 +12,8 @@ var canvas = document.getElementById('canvas'),
   centerHeight = height / 2 | 0,
   centerWidth = width / 2 | 0;
 
+var nameInput = document.querySelector('[name="name"]');
+
 var stars = new CanvasCollection(Star);
 var players = new CanvasCollection(FBPlayer);
 var particles = new CanvasCollection(Particle, 1000);
@@ -51,7 +53,7 @@ document.body.addEventListener('keyup', function(e) {
 document.querySelector('form').addEventListener('submit', function(e) {
 
   e.preventDefault();
-  name = e.target[0].value;
+  name = nameInput.value;
   thisPlayer = new Player();
   document.querySelector('#name').style.display = 'none';
 
@@ -163,3 +165,5 @@ socket.on('leave', function(data) {
 window.addEventListener('beforeunload', function () {
   socket.emit('leave', {name:name});
 }, false);
+
+nameInput.focus();
