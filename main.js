@@ -34,12 +34,16 @@ for (var i = 0; i < 150; i++) {
 var keys = {};
 document.body.addEventListener('keydown', function(e) {
   keys[e.keyCode] = true;
-  e.preventDefault();
+  if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
+    e.preventDefault();
+  }
 });
 
 document.body.addEventListener('keyup', function(e) {
   keys[e.keyCode] = false;
-  e.preventDefault();
+  if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
+    e.preventDefault();
+  }
 });
 
 document.querySelector('form').addEventListener('submit', function(e) {
