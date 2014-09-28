@@ -9,15 +9,47 @@
       margin: 0;
       padding: 0;
     }
+    #wrapper {
+      width: 960px;
+      height: 700px;
+      margin-left: auto;
+      margin-right: auto;
+      margin-top: 20px;
+    }
+    #name {
+      border-radius: 5px;
+      top: 50%;
+      left: 50%;
+      width: 300px;
+      margin-left: -150px;
+      position: absolute;
+      background-color: black;
+      border: 2px solid gray;
+      color: white;
+      text-align: center;
+    }
+    #name input, #name button {
+      border-radius: 5px;
+    }
+    #name input {
+      margin: auto;
+      width: 150px;
+      padding-left: 2px;
+    }
+    #name button {
+      margin: 10px;
+      /*float: right;*/
+    }
     #canvas {
       position: absolute;
       background-color: black;
-      margin-top: 10px;
-      margin-left: 10px;
     }
     table {
       float: right;
       margin-top: 50px;
+    }
+    h1 {
+      text-align: center;
     }
   </style>
   <!--
@@ -30,7 +62,17 @@
   -->
 </head>
 <body>
-  <canvas id="canvas"></canvas>
+  <h1>SPACESHIPS!</h1>
+  <div id="wrapper">
+    <canvas id="canvas" width="960" height="700"></canvas>
+    <div id="name">
+      <form>
+        <h3>What is your name, pilot?</h3>
+        <input type="text" name="name"><br>
+        <button type="submit">Enter</button>
+      </form>
+    </div>
+  </div>
   <table>
     <thead>
       <tr>
@@ -49,6 +91,6 @@
   <script type="text/javascript" src="stars.js"></script>
   <script type="text/javascript" src="main.js"></script>
   <script type="text/javascript" src="scoreboard.js"></script>
-  <script type="text/javascript" src="dat.spaceships.js"></script>
+  <!--<script type="text/javascript" src="dat.spaceships.js"></script>-->
 </body>
 </html>

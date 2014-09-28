@@ -1,6 +1,6 @@
 'use strict';
 
-var name = prompt('What is your name, pilot?');
+var name;
 var socket = io.connect(document.location.href);
 
 var canvas = document.getElementById('canvas'),
@@ -16,7 +16,7 @@ var stars = new CanvasCollection(Star);
 var players = new CanvasCollection(FBPlayer);
 var particles = new CanvasCollection(Particle, 1000);
 var playerBullets = new CanvasCollection(Particle);
-var thisPlayer = new Player();
+var thisPlayer;
 
 playerBullets.colliding = function (x, y) {
   for (var i = 0; i < playerBullets.items.length; i++) {
@@ -40,21 +40,44 @@ document.body.addEventListener('keyup', function(e) {
   keys[e.keyCode] = false;
 });
 
-socket.emit('join', {
-  x: thisPlayer.x,
-  y: thisPlayer.y,
-  dx: thisPlayer.dx,
-  dy: thisPlayer.dy,
-  angle: thisPlayer.angle,
-  firing: !!keys[32],
-  name: name
+document.querySelector('form').addEventListener('submit', function(e) {
+
+  e.preventDefault();
+  name = e.target[0].value;
+  thisPlayer = new Player();
+  document.querySelector('#name').style.display = 'none';
+
+  socket.emit('join', {
+    x: thisPlayer.x,
+    y: thisPlayer.y,
+    dx: thisPlayer.dx,
+    dy: thisPlayer.dy,
+    angle: thisPlayer.angle,
+    firing: !!keys[32],
+    name: name
+  });
+
+  setInterval(function () {
+    socket.emit('heartbeat', {
+      x: thisPlayer.x,
+      y: thisPlayer.y,
+      dx: thisPlayer.dx,
+      dy: thisPlayer.dy,
+      angle: thisPlayer.angle,
+      firing: !!keys[32],
+      name: name,
+      exploded: thisPlayer.exploded
+    });
+  }, 1000 / 30);
 });
 
 function run() {
   context.clearRect(0, 0, width, height);
   stars.render();
   players.render();
-  thisPlayer.render();
+  if (thisPlayer) {
+    thisPlayer.render();
+  }
   particles.render();
   playerBullets.render();
   context.globalAlpha = 1;
@@ -64,7 +87,9 @@ function run() {
 // This will continue running onblur
 setInterval(function() {
   stars.update();
-  thisPlayer.update();
+  if (thisPlayer) {
+    thisPlayer.update();
+  }
   particles.update();
   playerBullets.update();
   players.update();
@@ -74,19 +99,6 @@ setInterval(function() {
   playerBullets.gc();
   players.gc();
 }, 16);
-
-setInterval(function () {
-  socket.emit('heartbeat', {
-    x: thisPlayer.x,
-    y: thisPlayer.y,
-    dx: thisPlayer.dx,
-    dy: thisPlayer.dy,
-    angle: thisPlayer.angle,
-    firing: !!keys[32],
-    name: name,
-    exploded: thisPlayer.exploded
-  });
-}, 1000 / 30);
 
 run();
 
