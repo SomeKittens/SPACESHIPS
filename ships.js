@@ -25,15 +25,11 @@ function Player() {
 inherits(Player, CanvasItem);
 
 Player.prototype.update = function () {
-  if (keys[32]) {
-    if (thisPlayer.exploded) {
-      thisPlayer.reset();
-    } else {
-      thisPlayer.fire();
-    }
+  if (keys[32] && !thisPlayer.exploded) {
+    thisPlayer.fire();
   }
-  if (keys[90]) {
-    thisPlayer.explode();
+  if (keys[90] && thisPlayer.exploded) {
+    thisPlayer.reset();
   }
 
   if (this.exploded) { return; }
