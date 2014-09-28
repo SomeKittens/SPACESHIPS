@@ -16,6 +16,7 @@ var stars = new CanvasCollection(Star);
 var players = new CanvasCollection(FBPlayer);
 var particles = new CanvasCollection(Particle, 1000);
 var playerBullets = new CanvasCollection(Particle);
+var scoreboard = new Scoreboard();
 var thisPlayer;
 
 playerBullets.colliding = function (x, y) {
@@ -31,6 +32,7 @@ for (var i = 0; i < 150; i++) {
   stars.create();
 }
 
+// http://stackoverflow.com/a/8916697/1216976
 var keys = {};
 document.body.addEventListener('keydown', function(e) {
   keys[e.keyCode] = true;
@@ -84,6 +86,10 @@ function run() {
   if (thisPlayer) {
     thisPlayer.render();
   }
+  scoreboard.render();
+
+  // Particles & bullets need to be last
+  //   as they mess with globalAlpha
   particles.render();
   playerBullets.render();
   context.globalAlpha = 1;
@@ -97,6 +103,7 @@ setInterval(function() {
     thisPlayer.update();
   }
   particles.update();
+  scoreboard.update();
   playerBullets.update();
   players.update();
 

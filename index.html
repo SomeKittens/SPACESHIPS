@@ -21,7 +21,9 @@
       top: 50%;
       left: 50%;
       width: 300px;
+      height: 125px;
       margin-left: -150px;
+      margin-top: -63.5px;
       position: absolute;
       background-color: black;
       border: 2px solid gray;
@@ -38,15 +40,10 @@
     }
     #name button {
       margin: 10px;
-      /*float: right;*/
     }
     #canvas {
       position: absolute;
       background-color: black;
-    }
-    table {
-      float: right;
-      margin-top: 50px;
     }
     h1 {
       text-align: center;
@@ -73,15 +70,6 @@
       </form>
     </div>
   </div>
-  <table>
-    <thead>
-      <tr>
-        <td>Name</td>
-        <td>Score</td>
-      </tr>
-    </thead>
-    <tbody id="scoreboard"></tbody>
-  </table>
   <script src="/socket.io/socket.io.js"></script>
   <script type="text/javascript" src="lib/dat.gui.min.js"></script>
   <!--<script type="text/javascript" src="spaceships.min.js"></script>-->
@@ -89,8 +77,8 @@
   <script type="text/javascript" src="particles.js"></script>
   <script type="text/javascript" src="ships.js"></script>
   <script type="text/javascript" src="stars.js"></script>
-  <script type="text/javascript" src="main.js"></script>
   <script type="text/javascript" src="scoreboard.js"></script>
+  <script type="text/javascript" src="main.js"></script>
   <!--<script type="text/javascript" src="dat.spaceships.js"></script>-->
 </body>
 </html>
