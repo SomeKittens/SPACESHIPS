@@ -58,6 +58,8 @@ app.io.route('heartbeat', function(req) {
   req.io.broadcast('heartbeat', req.data);
   players[req.data.name] = req.data;
 
+  if (req.data.exploded) { return; }
+
   // Collision check
   Object.keys(players).forEach(function(key) {
     if (key === req.data.name) { return; }
