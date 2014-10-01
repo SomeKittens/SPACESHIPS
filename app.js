@@ -4,7 +4,7 @@ var express = require('express.io');
 var app = express();
 app.http().io();
 
-app.use(express.static(__dirname));
+app.use(express.static(__dirname + '/static'));
 
 var consts = {
   shipSize: 36
@@ -93,6 +93,10 @@ app.io.route('exploded', function(req) {
 
   req.io.broadcast('exploded', req.data);
   req.io.emit('exploded', req.data);
+});
+
+app.io.route('fire', function (req) {
+
 });
 
 app.listen(process.env.PORT || 8080);

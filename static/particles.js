@@ -34,19 +34,19 @@ Particle.prototype.update = function() {
   this.life -= this.decay;
 
   // Check for wraparound
-  if (this.x < -(this.r/2)) {
-    this.x = width + (this.r/2);
-  } else if (this.x > width + (this.r/2)) {
-    this.x = -(this.r/2);
+  if (this.x < -36) {
+    this.x = width + 36;
+  } else if (this.x > width + 36) {
+    this.x = -36;
   }
-  if (this.y < -(this.r/2)) {
-    this.y = height + (this.r/2);
-  } else if (this.y > height + (this.r/2)) {
-    this.y = -(this.r/2);
+  if (this.y < -36) {
+    this.y = height + 36;
+  } else if (this.y > height + 36) {
+    this.y = -36;
   }
 };
 Particle.prototype.render = function() {
-  context.globalAlpha = this.life;
+  context.globalAlpha = (this.life + (0.01/Math.log(this.life) + 1)) / 2;
   context.drawImage(this.img, this.x, this.y);
 };
 Particle.prototype.destroyed = function () {
@@ -59,7 +59,8 @@ function boom(x, y, dx, dy) {
     var props = {
       x: x,
       y: y,
-      c: color
+      c: color,
+      decay: 0.015
     };
     props.dx = dx + Math.random() * 4 - 2;
     props.dy = dy + Math.random() * 4 - 2;

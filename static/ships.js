@@ -31,6 +31,9 @@ Player.prototype.update = function () {
   if (keys[90] && thisPlayer.exploded) {
     thisPlayer.reset();
   }
+  if (keys[81]) {
+    thisPlayer.explode();
+  }
 
   if (this.exploded) { return; }
 
@@ -100,7 +103,7 @@ Player.prototype.fire = function () {
     dy: Math.cos(radians) * 10,
     c: 'rgba(0,24,234,1)',
     r: 7,
-    decay: 0.04
+    decay: 0.05
   });
 }
 
