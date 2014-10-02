@@ -1,8 +1,8 @@
 'use strict';
 
 var express = require('express.io');
-var Quadtree = require('quadtree');
-var Scores = require('scores');
+var Quadtree = require('./quadtree');
+var Scores = require('./scores');
 var app = express();
 app.http().io();
 
@@ -14,6 +14,7 @@ var consts = {
 
 var players = {};
 var scores = new Scores();
+var bullets = [];
 
 ['reset', 'leave'].forEach(function (e) {
   app.io.route(e, function (req) {
@@ -71,8 +72,43 @@ app.io.route('exploded', function(req) {
 });
 
 app.io.route('fire', function (req) {
-
+  bullets.push()
 });
+
+var tickLengthMs = 1000 / 30;
+
+var previousTick = Date.now()
+var actualTicks = 0;
+
+var gameLoop = function () {
+  var now = Date.now();
+  actualTicks++;
+
+  if (previousTick + tickLengthMs <= now) {
+    bullets = bullets.map(function (bullet) {
+      bullet.x += bullet.dx;
+      bullet.y += bullet.dy;
+      bullet.life -= bullet.decay;
+    }).filter(function (bullet) {
+      return bullet.life > 0;
+    });
+    var delta = (now - previousTick) / 1000;
+    previousTick = now;
+
+    // update(delta)
+
+    console.log('delta', delta, '(target: ' + tickLengthMs +' ms)', 'node ticks', actualTicks);
+    actualTicks = 0;
+  }
+
+  if (Date.now() - previousTick < tickLengthMs - 16) {
+    setTimeout(gameLoop);
+  } else {
+    setImmediate(gameLoop);
+  }
+};
+
+// gameLoop();
 
 app.listen(process.env.PORT || 8080);
 
