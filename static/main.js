@@ -113,7 +113,7 @@ setInterval(function() {
   particles.gc();
   playerBullets.gc();
   players.gc();
-}, 32);
+}, 16);
 
 run();
 

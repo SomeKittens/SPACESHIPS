@@ -9,6 +9,7 @@ app.http().io();
 app.use(express.static(__dirname + '/static'));
 
 var consts = {
+  fps: 60,
   shipSize: 36,
   width: 700,
   height: 960,
@@ -75,15 +76,14 @@ app.io.route('exploded', function(req) {
 });
 
 app.io.route('fire', function (req) {
-  console.log(req.data);
   bullets.push(req.data);
-  console.log(bullets);
 });
 
-var tickLengthMs = 1000 / 30;
+var tickLengthMs = 1000 / consts.fps;
 
 var previousTick = Date.now();
 var actualTicks = 0;
+var tickCollection = [];
 
 var gameLoop = function () {
   var now = Date.now();
@@ -137,6 +137,15 @@ var gameLoop = function () {
     });
 
     // console.log('delta', delta, '(target: ' + tickLengthMs +' ms)', 'node ticks', actualTicks);
+    tickCollection.push(actualTicks);
+    if (tickCollection.length === consts.fps) {
+      var sum = tickCollection.reduce(function(old, cur) {
+        return old + cur;
+      }, 0);
+      console.log('tick average', sum / consts.fps);
+      console.log(bullets.length);
+      tickCollection = [];
+    }
     actualTicks = 0;
   }
 
