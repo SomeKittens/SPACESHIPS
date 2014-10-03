@@ -105,7 +105,15 @@ Player.prototype.fire = function () {
     r: 7,
     decay: 0.05
   });
-}
+  socket.emit('fire', {
+    x: xx,
+    y: yy,
+    dx: Math.sin(radians) * 10,
+    dy: Math.cos(radians) * 10,
+    decay: 0.05,
+    life: 1
+  });
+};
 
 function FBPlayer (params) {
   this.x = params.x;
@@ -123,7 +131,7 @@ function FBPlayer (params) {
   this.img.src = 'http://retroships.com/generate.png?&size=3&seed=' + this.name;
 
   this.lastUpdated = new Date();
-};
+}
 
 inherits(FBPlayer, CanvasItem);
 
@@ -139,7 +147,7 @@ FBPlayer.prototype.update = function () {
   }
 };
 FBPlayer.prototype.destroyed = function () {
-  return !this.connected
+  return !this.connected;
 };
 
 
