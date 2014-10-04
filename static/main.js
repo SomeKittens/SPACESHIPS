@@ -147,6 +147,17 @@ socket.on('heartbeat', function (data) {
   plr.firing = data.firing;
   plr.exploded = data.exploded;
 });
+socket.on('fire', function (data) {
+  particles.create({
+    x: data.x,
+    y: data.y,
+    dx: data.dx,
+    dy: data.dy,
+    c: 'rgba(287,3,24,1)',
+    r: 7,
+    decay: 0.06
+  })
+});
 socket.on('leave', function(data) {
   fbPlayers[data.name] = null;
 });

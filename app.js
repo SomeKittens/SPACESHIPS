@@ -65,6 +65,7 @@ app.io.route('heartbeat', function(req) {
 
 app.io.route('fire', function (req) {
   bullets.push(req.data);
+  req.io.broadcast('fire', req.data);
 });
 
 app.io.route('debug-init', function() {
