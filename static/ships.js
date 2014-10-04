@@ -111,7 +111,8 @@ Player.prototype.fire = function () {
     dx: Math.sin(radians) * 10,
     dy: Math.cos(radians) * 10,
     decay: 0.05,
-    life: 1
+    life: 1,
+    owner: name
   });
 };
 
@@ -136,12 +137,12 @@ function FBPlayer (params) {
 inherits(FBPlayer, CanvasItem);
 
 FBPlayer.prototype.update = function () {
-  if (playerBullets.colliding(this.x, this.y)) {
-    socket.emit('exploded', {
-      name: this.name,
-      killer: name
-    });
-  }
+  // if (playerBullets.colliding(this.x, this.y)) {
+  //   socket.emit('exploded', {
+  //     name: this.name,
+  //     killer: name
+  //   });
+  // }
   if (this.firing && !this.exploded) {
     this.fire();
   }

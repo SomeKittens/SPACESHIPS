@@ -21,15 +21,6 @@ var playerBullets = new CanvasCollection(Particle);
 var scoreboard = new Scoreboard();
 var thisPlayer;
 
-playerBullets.colliding = function (x, y) {
-  for (var i = 0; i < playerBullets.items.length; i++) {
-    if (within(playerBullets.items[i].x, x, 24) && within(playerBullets.items[i].y, y, 24)) {
-      return true;
-    }
-  }
-  return false;
-};
-
 for (var i = 0; i < 150; i++) {
   stars.create();
 }
@@ -63,7 +54,6 @@ document.querySelector('form').addEventListener('submit', function(e) {
     dx: thisPlayer.dx,
     dy: thisPlayer.dy,
     angle: thisPlayer.angle,
-    firing: !!keys[32],
     name: name
   });
 
@@ -74,7 +64,6 @@ document.querySelector('form').addEventListener('submit', function(e) {
       dx: thisPlayer.dx,
       dy: thisPlayer.dy,
       angle: thisPlayer.angle,
-      firing: !!keys[32],
       name: name,
       exploded: thisPlayer.exploded
     });

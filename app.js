@@ -63,19 +63,6 @@ app.io.route('heartbeat', function(req) {
   });
 });
 
-app.io.route('exploded', function(req) {
-  if (players[req.data.name].exploded) { return; }
-  players[req.data.name].exploded = true;
-
-  scores.scorePoint(req.data.killer);
-  console.log(scores.toSortedArray());
-  req.io.broadcast('score', scores.toSortedArray());
-  req.io.emit('score', scores.toSortedArray());
-
-  req.io.broadcast('exploded', req.data);
-  req.io.emit('exploded', req.data);
-});
-
 app.io.route('fire', function (req) {
   bullets.push(req.data);
 });
@@ -123,12 +110,14 @@ var gameLoop = function () {
         x: bullet.x,
         y: bullet.y,
         width: consts.bulletSize,
-        height: consts.bulletSize
+        height: consts.bulletSize,
+        owner: bullet.owner
       });
     });
 
     Object.keys(players).forEach(function(playerKey) {
       var player = players[playerKey];
+      if (player.exploded) { return; }
       var possibleHits = quadtree.retrieve({
         x: player.x,
         y: player.y,
@@ -136,18 +125,29 @@ var gameLoop = function () {
         height: consts.playerSize
       });
 
-      var hit = possibleHits.some(function(bullet) {
-        var x = player.x - bullet.x,
-            y = player.y - bullet.y,
-            distance = Math.sqrt(x*x + y*y);
-        return distance <= consts.bulletSize/2 + consts.shipSize/2
-      });
+
+      var hit, x, y, distance;
+      for (var i = 0, len = possibleHits.length; i < len; i++) {
+        x = player.x - possibleHits[i].x;
+        y = player.y - possibleHits[i].y;
+        distance = Math.sqrt(x*x + y*y);
+        if (distance <= consts.bulletSize/2 + consts.shipSize/2) {
+          hit = possibleHits[i];
+          break;
+        }
+      }
+
       if (hit) {
-        console.log(playerKey, 'was hit');
+        console.log(playerKey, 'was hit', hit);
+        scores.scorePoint(hit.owner);
+        console.log(scores.toSortedArray());
+        app.io.broadcast('score', scores.toSortedArray());
+        app.io.broadcast('exploded', {
+          name: playerKey
+        });
       }
     });
 
-    // console.log('delta', delta, '(target: ' + tickLengthMs +' ms)', 'node ticks', actualTicks);
     if (debug) {
       tickCollection.push(actualTicks);
       if (tickCollection.length === consts.fps) {
