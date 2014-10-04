@@ -19,6 +19,7 @@ var consts = {
 var players = {};
 var scores = new Scores();
 var bullets = [];
+var debug = false;
 
 ['reset', 'leave'].forEach(function (e) {
   app.io.route(e, function (req) {
@@ -79,6 +80,16 @@ app.io.route('fire', function (req) {
   bullets.push(req.data);
 });
 
+app.io.route('debug-init', function() {
+  debug = true;
+});
+app.io.route('debug-fire-10', function(req) {
+  if (!debug) { return; }
+  for (var i = 0; i < 10; i++) {
+    bullets.push(req.data);
+  }
+});
+
 var tickLengthMs = 1000 / consts.fps;
 
 var previousTick = Date.now();
@@ -137,14 +148,20 @@ var gameLoop = function () {
     });
 
     // console.log('delta', delta, '(target: ' + tickLengthMs +' ms)', 'node ticks', actualTicks);
-    tickCollection.push(actualTicks);
-    if (tickCollection.length === consts.fps) {
-      var sum = tickCollection.reduce(function(old, cur) {
-        return old + cur;
-      }, 0);
-      console.log('tick average', sum / consts.fps);
-      console.log(bullets.length);
-      tickCollection = [];
+    if (debug) {
+      tickCollection.push(actualTicks);
+      if (tickCollection.length === consts.fps) {
+        var sum = tickCollection.reduce(function(old, cur) {
+          return old + cur;
+        }, 0);
+        console.log('tick average', sum / consts.fps);
+        console.log(bullets.length);
+        app.io.broadcast('debug-update', {
+          tickAverage: sum / consts.fps,
+          bullets: bullets.length
+        });
+        tickCollection = [];
+      }
     }
     actualTicks = 0;
   }
