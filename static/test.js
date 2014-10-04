@@ -9,9 +9,12 @@ socket.emit('debug-init');
 socket.on('debug-update', function(data) {
   console.log(data);
   results.innerHTML += 'tickAverage: ' + data.tickAverage.toFixed(2) + ', bullets: ' + data.bullets + '<br>';
+  if (data.tickAverage === 1) {
+    clearInterval(addBulletInterval);
+  }
 });
 
-setInterval(function () {
+var addBulletInterval = setInterval(function () {
   socket.emit('debug-fire-10', {
     x: Math.random() * 500 | 0,
     y: Math.random() * 500 | 0,
