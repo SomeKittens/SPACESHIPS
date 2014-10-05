@@ -129,6 +129,7 @@ var gameLoop = function () {
 
       var hit, x, y, distance;
       for (var i = 0, len = possibleHits.length; i < len; i++) {
+        if (possibleHits[i].owner === playerKey) { continue; }
         x = player.x - possibleHits[i].x;
         y = player.y - possibleHits[i].y;
         distance = Math.sqrt(x*x + y*y);
