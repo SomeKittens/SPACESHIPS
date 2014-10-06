@@ -1,6 +1,7 @@
 {
   "name": "spaceships",
   "description": "Spaceships! In space! And shooty fun gun!",
+  "version": "0.0.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/SomeKittens/SPACESHIPS"
