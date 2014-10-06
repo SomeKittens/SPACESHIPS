@@ -27,17 +27,28 @@ var debug = false;
   });
 });
 
-app.io.route('join', function(req) {
-  req.io.broadcast('join', req.data);
+var playerInit = function (req) {
   players[req.data.name] = req.data;
   scores.addPlayer(req.data.name);
   req.io.emit('score', scores.toSortedArray());
   req.io.broadcast('score', scores.toSortedArray());
+}
+
+app.io.route('join', function(req) {
+  req.io.broadcast('join', req.data);
+  playerInit(req);
 });
 
 app.io.route('heartbeat', function(req) {
   req.io.broadcast('heartbeat', req.data);
-  players[req.data.name] = req.data;
+  if (!players[req.data.name]) {
+    playerInit(req);
+  }
+  players[req.data.name].x =  req.data.x;
+  players[req.data.name].y =  req.data.y;
+  players[req.data.name].dx =  req.data.dx;
+  players[req.data.name].dy =  req.data.dy;
+  players[req.data.name].angle =  req.data.angle;
 
   if (req.data.exploded) { return; }
 
@@ -143,6 +154,7 @@ var gameLoop = function () {
         console.log(playerKey, 'was hit', hit);
         scores.scorePoint(hit.owner);
         console.log(scores.toSortedArray());
+        players[playerKey].exploded = true;
         app.io.broadcast('score', scores.toSortedArray());
         app.io.broadcast('exploded', {
           name: playerKey

@@ -137,12 +137,6 @@ function FBPlayer (params) {
 inherits(FBPlayer, CanvasItem);
 
 FBPlayer.prototype.update = function () {
-  // if (playerBullets.colliding(this.x, this.y)) {
-  //   socket.emit('exploded', {
-  //     name: this.name,
-  //     killer: name
-  //   });
-  // }
   if (this.firing && !this.exploded) {
     this.fire();
   }
