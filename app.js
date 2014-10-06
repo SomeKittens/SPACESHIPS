@@ -21,10 +21,13 @@ var scores = new Scores();
 var bullets = [];
 var debug = false;
 
-['reset', 'leave'].forEach(function (e) {
-  app.io.route(e, function (req) {
-    req.io.broadcast(e, req.data);
-  });
+app.io.route('leave', function (req) {
+  req.io.broadcast('leave', req.data);
+});
+
+app.io.route('reset', function (req) {
+  req.io.broadcast('reset', req.data);
+  players[req.data.name].exploded = false;
 });
 
 var playerInit = function (req) {
@@ -192,3 +195,16 @@ gameLoop();
 app.listen(process.env.PORT || 8080);
 
 console.log('running');
+process.stdin.setEncoding('utf8');
+
+process.stdin.on('readable', function() {
+  var chunk = process.stdin.read();
+  switch (chunk) {
+    case 'b\n':
+      console.log(bullets);
+      break;
+    case 's\n':
+      console.log(players);
+      break;
+  }
+});
