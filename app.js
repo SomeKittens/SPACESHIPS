@@ -33,8 +33,7 @@ app.io.route('reset', function (req) {
 var playerInit = function (req) {
   players[req.data.name] = req.data;
   scores.addPlayer(req.data.name);
-  req.io.emit('score', scores.toSortedArray());
-  req.io.broadcast('score', scores.toSortedArray());
+  app.io.broadcast('score', scores.toSortedArray());
 }
 
 app.io.route('join', function(req) {

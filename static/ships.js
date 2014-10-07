@@ -15,6 +15,10 @@ function Player() {
   // Fires a bullet every fireRate millis
   this.fireRate = 300;
   this.lastFire = Date.now();
+  this.particleRate = 200;
+  this.lastParticle = {
+    time: Date.now()
+  };
 
   this.name = name;
 
@@ -77,6 +81,30 @@ Player.prototype.update = function () {
   // There's totally friction in space.
   this.dx *= 0.98;
   this.dy *= 0.98;
+
+  var radians = (this.angle + 0.055) * (180/Math.PI);
+
+  var xx = this.x - (this.w/2 * Math.cos(-(this.angle + 0.0275) * (180/Math.PI)));
+  var yy = this.y - (this.w/2 * Math.sin(-(this.angle + 0.0275) * (180/Math.PI)));
+
+  var r = this.w/2;
+  // Particle trails
+  if (Date.now() - this.particleRate >= this.lastParticle.time &&
+      (!within(this.lastParticle.x, xx, 5) ||
+      !within(this.lastParticle.y, yy, 5))) {
+    this.lastParticle = {
+      time: Date.now(),
+      x: xx,
+      y: yy
+    };
+    particles.create({
+      x: xx,
+      y: yy,
+      r: 5,
+      c: 'rgb(0,0,200)',
+      decay: 0.015
+    });
+  }
 };
 Player.prototype.destroyed = function () {
   return this.exploded;
@@ -149,8 +177,9 @@ FBPlayer.prototype.destroyed = function () {
 FBPlayer.prototype.render = Player.prototype.render = function () {
   context.fillStyle = 'white';
   context.font = '12px Arial';
-  var w = context.measureText(this.name).width;
-  context.fillText(this.name, this.x - (w/2), this.y + this.h);
+  var title = this.exploded ? '☠ ' + this.name + ' ☠' : this.name;
+  var w = context.measureText(title).width;
+  context.fillText(title, this.x - (w/2), this.y + this.h);
   if (this.exploded) { return; }
   context.save();
   context.translate(this.x, this.y);

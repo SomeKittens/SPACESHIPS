@@ -17,8 +17,8 @@ function Particle(props) {
     return canvas;
   }());
 
-  this.dx = props.dx;
-  this.dy = props.dy;
+  this.dx = props.dx || 0;
+  this.dy = props.dy || 0;
 
   this.created = Date.now();
   this.life = 1;

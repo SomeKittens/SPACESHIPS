@@ -13,6 +13,7 @@ function inherits (ctor, superCtor) {
 }
 
 function within(x, y, within) {
+  if (!x || !y) { return false; }
   return x + within >= y && x - within <= y;
 }
 

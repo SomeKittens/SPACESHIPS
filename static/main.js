@@ -44,7 +44,7 @@ document.body.addEventListener('keyup', function(e) {
 var respawnMessageFlasher = (function () {
     var title = document.querySelector('title');
     var timeout;
-    
+
     return function (pilot) {
         clearTimeout(timeout);
 
