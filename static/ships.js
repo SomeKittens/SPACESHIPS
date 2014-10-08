@@ -101,7 +101,7 @@ Player.prototype.update = function () {
       x: xx,
       y: yy,
       r: 5,
-      c: 'rgb(0,0,200)',
+      c: 'rgb(130,100,0)',
       decay: 0.015
     });
   }
@@ -156,6 +156,11 @@ function FBPlayer (params) {
   this.connected = true;
   this.exploded = !!params.exploded;
 
+  this.particleRate = 200;
+  this.lastParticle = {
+    time: Date.now()
+  };
+
   this.img = new Image();
   this.img.src = 'http://retroships.com/generate.png?&size=3&seed=' + this.name;
 
@@ -165,8 +170,28 @@ function FBPlayer (params) {
 inherits(FBPlayer, CanvasItem);
 
 FBPlayer.prototype.update = function () {
-  if (this.firing && !this.exploded) {
-    this.fire();
+  var radians = (this.angle + 0.055) * (180/Math.PI);
+
+  var xx = this.x - (this.w/2 * Math.cos(-(this.angle + 0.0275) * (180/Math.PI)));
+  var yy = this.y - (this.w/2 * Math.sin(-(this.angle + 0.0275) * (180/Math.PI)));
+
+  var r = this.w/2;
+  // Particle trails
+  if (Date.now() - this.particleRate >= this.lastParticle.time &&
+      (!within(this.lastParticle.x, xx, 5) ||
+      !within(this.lastParticle.y, yy, 5))) {
+    this.lastParticle = {
+      time: Date.now(),
+      x: xx,
+      y: yy
+    };
+    particles.create({
+      x: xx,
+      y: yy,
+      r: 5,
+      c: 'rgb(130,100,0)',
+      decay: 0.015
+    });
   }
 };
 FBPlayer.prototype.destroyed = function () {
@@ -196,21 +221,4 @@ FBPlayer.prototype.reset = Player.prototype.reset = function (params) {
     socket.emit('reset', {name: name});
   }
   this.constructor(params);
-};
-FBPlayer.prototype.fire = function () {
-  var radians = (this.angle + 0.055) * (180/Math.PI);
-
-  var xx = this.x + (this.w/2 * Math.cos(-(this.angle + 0.0275) * (180/Math.PI)));
-  var yy = this.y + (this.w/2 * Math.sin(-(this.angle + 0.0275) * (180/Math.PI)));
-
-  var r = this.w/2;
-  particles.create({
-    x: xx,
-    y: yy,
-    dx: Math.sin(radians) * 10,
-    dy: Math.cos(radians) * 10,
-    c: 'rgba(287,3,24,1)',
-    r: 7,
-    decay: 0.06
-  });
 };
