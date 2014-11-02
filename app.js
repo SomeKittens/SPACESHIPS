@@ -13,13 +13,22 @@ var consts = {
   shipSize: 36,
   width: 700,
   height: 960,
-  bulletSize: 7
+  bulletSize: 7,
+  gameX: 1500,
+  gameY: 1500
 };
 
 var players = {};
 var scores = new Scores();
 var bullets = [];
 var debug = false;
+
+app.io.route('init', function (req) {
+  req.io.emit('init', {
+    gameX: consts.gameX,
+    gameY: consts.gameY
+  });
+});
 
 app.io.route('leave', function (req) {
   req.io.broadcast('leave', req.data);

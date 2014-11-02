@@ -12,6 +12,8 @@ var canvas = document.getElementById('canvas'),
   centerHeight = height / 2 | 0,
   centerWidth = width / 2 | 0;
 
+var field = {};
+
 var nameInput = document.querySelector('[name="name"]');
 
 var stars = new CanvasCollection(Star);
@@ -136,6 +138,10 @@ socket.on('join', function (data) {
     fbPlayers[data.name] = players.create(data);
   }
 });
+socket.on('init', function (data) {
+  field.x = data.gameX;
+  field.y = data.gameY;
+});
 socket.on('exploded', function (data) {
   if (data.name === name) {
     thisPlayer.explode();
@@ -187,3 +193,4 @@ window.addEventListener('beforeunload', function () {
 }, false);
 
 nameInput.focus();
+socket.emit('init');

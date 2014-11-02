@@ -1,6 +1,11 @@
 function Player() {
-  this.x = Math.random() * width | 0;
-  this.y = Math.random() * height| 0;
+  this.offset = {
+    x: (Math.random() * (field.x - width)| 0),
+    y: (Math.random() * (field.y - height)| 0)
+  };
+  this.x = width/2;
+  this.y = height/2;
+
 
   // Image h/w
   this.h = this.w = 36;
@@ -63,19 +68,36 @@ Player.prototype.update = function () {
     this.dy += Math.cos(radians) * this.thrust;
   }
   // Actually make changes
-  this.x += this.dx;
-  this.y += this.dy;
-
+  // TODO: math is wrong here - can't get out once start changing x/y
+  // check needs to be against offset PLUS x/y
+  if ((this.offset.x <= 0 && this.x <= (width / 2)) ||
+    (this.offset.x >= field.x - width && this.x >= (width / 2))
+  ) {
+    this.x += this.dx;
+  } else {
+    this.offset.x += this.dx;
+  }
+  if ((this.offset.y <= 0 && this.y <= (height / 2)) ||
+    (this.offset.y >= field.y - height && this.y >= (height / 2))
+  ) {
+    this.y += this.dy;
+  } else {
+    this.offset.y += this.dy;
+  }
   // Check for wraparound
   if (this.x < -(this.w/2)) {
     this.x = width + (this.w/2);
+    this.offset.x = field.x - width;
   } else if (this.x > width + (this.w/2)) {
     this.x = -(this.w/2);
+    this.offset.x = 0;
   }
   if (this.y < -(this.h/2)) {
     this.y = height + (this.h/2);
+    this.offset.y = field.y - height;
   } else if (this.y > height + (this.h/2)) {
     this.y = -(this.h/2);
+    this.offset.y = 0;
   }
 
   // There's totally friction in space.
