@@ -63,7 +63,6 @@ app.io.route('heartbeat', function(req) {
     y: req.data.offset.y
   };
 
-
   if (req.data.exploded) { return; }
 
   // Collision check
@@ -71,8 +70,8 @@ app.io.route('heartbeat', function(req) {
     if (key === req.data.name) { return; }
     var otherPlayer = players[key];
     if (otherPlayer.exploded) { return; }
-    var x = otherPlayer.x - req.data.x,
-        y = otherPlayer.y - req.data.y,
+    var x = (otherPlayer.x + otherPlayer.offset.x) - (req.data.x + req.data.offset.x),
+        y = (otherPlayer.y + otherPlayer.offset.y) - (req.data.y + req.data.offset.y),
         distance = Math.sqrt(x*x + y*y);
     if (distance <= consts.shipSize) {
       console.log(req.data.name, ' collided with ', key);
@@ -205,6 +204,8 @@ gameLoop();
 app.listen(process.env.PORT || 8080);
 
 console.log('running');
+
+// Debug info REPL
 process.stdin.setEncoding('utf8');
 
 process.stdin.on('readable', function() {
