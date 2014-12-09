@@ -11,11 +11,9 @@ app.use(express.static(__dirname + '/static'));
 var consts = {
   fps: 60,
   shipSize: 36,
-  width: 700,
-  height: 960,
-  bulletSize: 7,
-  gameX: 1500,
-  gameY: 1500
+  width: 1500,
+  height: 1500,
+  bulletSize: 7
 };
 
 var players = {};
@@ -25,8 +23,8 @@ var debug = false;
 
 app.io.route('init', function (req) {
   req.io.emit('init', {
-    gameX: consts.gameX,
-    gameY: consts.gameY
+    gameX: consts.width,
+    gameY: consts.height
   });
 });
 
@@ -43,7 +41,7 @@ var playerInit = function (req) {
   players[req.data.name] = req.data;
   scores.addPlayer(req.data.name);
   app.io.broadcast('score', scores.toSortedArray());
-}
+};
 
 app.io.route('join', function(req) {
   req.io.broadcast('join', req.data);
@@ -55,11 +53,16 @@ app.io.route('heartbeat', function(req) {
   if (!players[req.data.name]) {
     playerInit(req);
   }
-  players[req.data.name].x =  req.data.x;
-  players[req.data.name].y =  req.data.y;
-  players[req.data.name].dx =  req.data.dx;
-  players[req.data.name].dy =  req.data.dy;
-  players[req.data.name].angle =  req.data.angle;
+  players[req.data.name].x = req.data.x;
+  players[req.data.name].y = req.data.y;
+  players[req.data.name].dx = req.data.dx;
+  players[req.data.name].dy = req.data.dy;
+  players[req.data.name].angle = req.data.angle;
+  players[req.data.name].offset = {
+    x: req.data.offset.x,
+    y: req.data.offset.y
+  };
+
 
   if (req.data.exploded) { return; }
 
@@ -111,7 +114,6 @@ var gameLoop = function () {
   actualTicks++;
 
   if (previousTick + tickLengthMs <= now) {
-    var delta = (now - previousTick) / 1000;
     previousTick = now;
 
     var quadtree = new Quadtree({

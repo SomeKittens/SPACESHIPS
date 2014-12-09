@@ -76,6 +76,7 @@ document.querySelector('form').addEventListener('submit', function(e) {
     dx: thisPlayer.dx,
     dy: thisPlayer.dy,
     angle: thisPlayer.angle,
+    offset: thisPlayer.offset,
     name: name
   });
 
@@ -86,6 +87,7 @@ document.querySelector('form').addEventListener('submit', function(e) {
       dx: thisPlayer.dx,
       dy: thisPlayer.dy,
       angle: thisPlayer.angle,
+      offset: thisPlayer.offset,
       name: name
     });
   }, 1000 / 30);
@@ -172,6 +174,7 @@ socket.on('heartbeat', function (data) {
   plr.dx = data.dx;
   plr.dy = data.dy;
   plr.angle = data.angle;
+  plr.offset = data.offset;
 });
 socket.on('fire', function (data) {
   particles.create({
