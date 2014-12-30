@@ -76,7 +76,6 @@ document.querySelector('form').addEventListener('submit', function(e) {
     dx: thisPlayer.dx,
     dy: thisPlayer.dy,
     angle: thisPlayer.angle,
-    offset: thisPlayer.offset,
     name: name
   });
 
@@ -87,7 +86,6 @@ document.querySelector('form').addEventListener('submit', function(e) {
       dx: thisPlayer.dx,
       dy: thisPlayer.dy,
       angle: thisPlayer.angle,
-      offset: thisPlayer.offset,
       name: name
     });
   }, 1000 / 30);
@@ -174,7 +172,6 @@ socket.on('heartbeat', function (data) {
   plr.dx = data.dx;
   plr.dy = data.dy;
   plr.angle = data.angle;
-  plr.offset = data.offset;
 });
 socket.on('fire', function (data) {
   particles.create({
@@ -185,14 +182,14 @@ socket.on('fire', function (data) {
     c: 'rgba(287,3,24,1)',
     r: 7,
     decay: 0.06
-  })
+  });
 });
 socket.on('leave', function(data) {
   fbPlayers[data.name] = null;
 });
 
 window.addEventListener('beforeunload', function () {
-  socket.emit('leave', {name:name});
+  socket.emit('leave', {name: name});
 }, false);
 
 nameInput.focus();

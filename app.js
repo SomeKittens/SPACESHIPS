@@ -58,10 +58,6 @@ app.io.route('heartbeat', function(req) {
   players[req.data.name].dx = req.data.dx;
   players[req.data.name].dy = req.data.dy;
   players[req.data.name].angle = req.data.angle;
-  players[req.data.name].offset = {
-    x: req.data.offset.x,
-    y: req.data.offset.y
-  };
 
   if (req.data.exploded) { return; }
 
@@ -70,8 +66,8 @@ app.io.route('heartbeat', function(req) {
     if (key === req.data.name) { return; }
     var otherPlayer = players[key];
     if (otherPlayer.exploded) { return; }
-    var x = (otherPlayer.x + otherPlayer.offset.x) - (req.data.x + req.data.offset.x),
-        y = (otherPlayer.y + otherPlayer.offset.y) - (req.data.y + req.data.offset.y),
+    var x = (otherPlayer.x) - (req.data.x),
+        y = (otherPlayer.y) - (req.data.y),
         distance = Math.sqrt(x*x + y*y);
     if (distance <= consts.shipSize) {
       console.log(req.data.name, ' collided with ', key);
