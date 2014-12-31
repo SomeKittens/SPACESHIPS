@@ -29,7 +29,8 @@ CanvasItem.prototype = {
   update: function () {},
   destroyed: function () {},
   render: function () {
-    context.drawImage(this.img, this.x, this.y);
+    var coords = convertToCoords(this.x, this.y);
+    context.drawImage(this.img, coords.x, coords.y);
   }
 };
 

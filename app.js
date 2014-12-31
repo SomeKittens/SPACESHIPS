@@ -11,8 +11,8 @@ app.use(express.static(__dirname + '/static'));
 var consts = {
   fps: 60,
   shipSize: 36,
-  width: 700,
-  height: 960,
+  width: 2500,
+  height: 2500,
   bulletSize: 7
 };
 
@@ -20,6 +20,13 @@ var players = {};
 var scores = new Scores();
 var bullets = [];
 var debug = false;
+
+app.io.route('init', function (req) {
+  req.io.emit('init', {
+    gameX: consts.width,
+    gameY: consts.height
+  });
+});
 
 app.io.route('leave', function (req) {
   req.io.broadcast('leave', req.data);
@@ -34,7 +41,7 @@ var playerInit = function (req) {
   players[req.data.name] = req.data;
   scores.addPlayer(req.data.name);
   app.io.broadcast('score', scores.toSortedArray());
-}
+};
 
 app.io.route('join', function(req) {
   req.io.broadcast('join', req.data);
@@ -46,21 +53,21 @@ app.io.route('heartbeat', function(req) {
   if (!players[req.data.name]) {
     playerInit(req);
   }
-  players[req.data.name].x =  req.data.x;
-  players[req.data.name].y =  req.data.y;
-  players[req.data.name].dx =  req.data.dx;
-  players[req.data.name].dy =  req.data.dy;
-  players[req.data.name].angle =  req.data.angle;
+  players[req.data.name].x = req.data.x;
+  players[req.data.name].y = req.data.y;
+  players[req.data.name].dx = req.data.dx;
+  players[req.data.name].dy = req.data.dy;
+  players[req.data.name].angle = req.data.angle;
 
-  if (req.data.exploded) { return; }
+  if (req.data.exploded || players[req.data.name].exploded) { return; }
 
   // Collision check
   Object.keys(players).forEach(function(key) {
     if (key === req.data.name) { return; }
     var otherPlayer = players[key];
     if (otherPlayer.exploded) { return; }
-    var x = otherPlayer.x - req.data.x,
-        y = otherPlayer.y - req.data.y,
+    var x = (otherPlayer.x) - (req.data.x),
+        y = (otherPlayer.y) - (req.data.y),
         distance = Math.sqrt(x*x + y*y);
     if (distance <= consts.shipSize) {
       console.log(req.data.name, ' collided with ', key);
@@ -102,7 +109,6 @@ var gameLoop = function () {
   actualTicks++;
 
   if (previousTick + tickLengthMs <= now) {
-    var delta = (now - previousTick) / 1000;
     previousTick = now;
 
     var quadtree = new Quadtree({
@@ -194,6 +200,8 @@ gameLoop();
 app.listen(process.env.PORT || 8080);
 
 console.log('running');
+
+// Debug info REPL
 process.stdin.setEncoding('utf8');
 
 process.stdin.on('readable', function() {

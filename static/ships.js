@@ -1,6 +1,11 @@
 function Player() {
-  this.x = Math.random() * width | 0;
-  this.y = Math.random() * height| 0;
+  this.x = (Math.random() * (field.x - width)| 0) + width/2;
+  this.y = (Math.random() * (field.y - height)| 0) + height/2;
+
+  this.offset = {
+    x: 0,
+    y: 0
+  };
 
   // Image h/w
   this.h = this.w = 36;
@@ -23,7 +28,8 @@ function Player() {
   this.name = name;
 
   this.img = new Image();
-  this.img.src = 'http://retroships.com/generate.png?&size=3&cB=300&seed=' + name;
+  // this.img.src = 'http://retroships.com/generate.png?&size=3&cB=300&seed=' + name;
+  this.img.src = '/player.png';
 }
 
 inherits(Player, CanvasItem);
@@ -62,20 +68,47 @@ Player.prototype.update = function () {
     this.dx += Math.sin(radians) * this.thrust;
     this.dy += Math.cos(radians) * this.thrust;
   }
-  // Actually make changes
+
   this.x += this.dx;
   this.y += this.dy;
 
-  // Check for wraparound
-  if (this.x < -(this.w/2)) {
-    this.x = width + (this.w/2);
-  } else if (this.x > width + (this.w/2)) {
-    this.x = -(this.w/2);
+  if (this.x < 0) {
+    this.x = 0;
+    this.offset.x = -width/2;
+    this.dx = -this.dx;
   }
-  if (this.y < -(this.h/2)) {
-    this.y = height + (this.h/2);
-  } else if (this.y > height + (this.h/2)) {
-    this.y = -(this.h/2);
+  if (this.x > field.x) {
+    this.x = field.x;
+    this.offset.x = width/2;
+    this.dx = -this.dx;
+  }
+
+  if (this.y < 0) {
+    this.y = 0;
+    this.offset.y = -height/2;
+    this.dy = -this.dy;
+  }
+  if (this.y > field.y) {
+    this.y = field.y;
+    this.offset.y = height/2;
+    this.dy = -this.dy;
+  }
+
+  // Actually make changes
+  if (this.x < width/2) {
+    this.offset.x += this.dx;
+  } else if (this.x > field.x - width/2) {
+    this.offset.x += this.dx;
+  } else if (this.offset.x) {
+    this.offset.x = 0;
+  }
+
+  if (this.y < height/2) {
+    this.offset.y += this.dy;
+  } else if (this.y > field.y - height/2) {
+    this.offset.y += this.dy;
+  } else if (this.offset.y) {
+    this.offset.y = 0;
   }
 
   // There's totally friction in space.
@@ -143,6 +176,23 @@ Player.prototype.fire = function () {
     owner: name
   });
 };
+Player.prototype.render = function () {
+  context.fillStyle = 'white';
+  context.font = '12px Arial';
+  var playerX = width/2 + this.offset.x;
+  var playerY = height/2 + this.offset.y;
+  var title = this.exploded ? '☠ ' + this.name + ' ☠' : this.name;
+  var w = context.measureText(title).width;
+  context.fillText(title, playerX - (w/2), playerY + this.h);
+  if (this.exploded) { return; }
+  context.save();
+  // context.translate(this.x, this.y);
+  context.translate(playerX, playerY);
+  // 0.055 adjustment rotates image 180 degrees
+  context.rotate(-(this.angle + 0.055) * (180/Math.PI));
+  context.drawImage(this.img, -this.w/2, -this.h/2);
+  context.restore();
+};
 
 function FBPlayer (params) {
   this.x = params.x;
@@ -198,16 +248,16 @@ FBPlayer.prototype.destroyed = function () {
   return !this.connected;
 };
 
-
-FBPlayer.prototype.render = Player.prototype.render = function () {
+FBPlayer.prototype.render = function () {
+  var coords = convertToCoords(this.x, this.y);
   context.fillStyle = 'white';
   context.font = '12px Arial';
   var title = this.exploded ? '☠ ' + this.name + ' ☠' : this.name;
   var w = context.measureText(title).width;
-  context.fillText(title, this.x - (w/2), this.y + this.h);
+  context.fillText(title, coords.x - (w/2), coords.y + this.h);
   if (this.exploded) { return; }
   context.save();
-  context.translate(this.x, this.y);
+  context.translate(coords.x, coords.y);
   context.rotate(-(this.angle + 0.055) * (180/Math.PI));
   context.drawImage(this.img, -this.w/2, -this.h/2);
   context.restore();

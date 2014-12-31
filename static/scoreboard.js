@@ -12,6 +12,12 @@ Scoreboard.prototype.render = function () {
   var longest = {
     name: ''
   };
+  if (thisPlayer) {
+    this.scores = [{
+      name: Math.round(thisPlayer.x),
+      score: Math.round(thisPlayer.y)
+    }];
+  }
   if (this.scores) {
     longest = this.scores.sort(function(a, b) {
       return b.name.length - a.name.length;
