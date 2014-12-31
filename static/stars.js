@@ -1,6 +1,6 @@
 function Star() {
-  this.x = Math.random() * width | 0;
-  this.y = Math.random() * height | 0;
+  this.x = (Math.random() * (field.x)| 0);
+  this.y = (Math.random() * (field.y)| 0);
 
   this.img = (function() {
     var canvas = document.createElement('canvas'),
@@ -16,10 +16,3 @@ function Star() {
 }
 
 inherits(Star, CanvasItem);
-
-Star.prototype.update = function() {
-  this.y += 1;
-  if(this.y >= height) {
-    this.y = 0;
-  }
-};

@@ -1,6 +1,11 @@
 function Player() {
-  this.x = (Math.random() * (field.x - width)| 0);
-  this.y = (Math.random() * (field.y - height)| 0);
+  this.x = (Math.random() * (field.x)| 0);
+  this.y = (Math.random() * (field.y)| 0);
+
+  this.offset = {
+    x: 0,
+    y: 0
+  };
 
   // Image h/w
   this.h = this.w = 36;
@@ -66,38 +71,45 @@ Player.prototype.update = function () {
 
   this.x += this.dx;
   this.y += this.dy;
+
+  if (this.x < 0) {
+    this.x = 0;
+    this.offset.x = -width/2;
+    this.dx = -this.dx;
+  }
+  if (this.x > field.x) {
+    this.x = field.x;
+    this.offset.x = width/2;
+    this.dx = -this.dx;
+  }
+
+  if (this.y < 0) {
+    this.y = 0;
+    this.offset.y = -height/2;
+    this.dy = -this.dy;
+  }
+  if (this.y > field.y) {
+    this.y = field.y;
+    this.offset.y = height/2;
+    this.dy = -this.dy;
+  }
+
   // Actually make changes
-  // TODO: math is wrong here - can't get out once start changing x/y
-  // check needs to be against offset PLUS x/y
-  // if ((this.offset.x <= 0 && this.x <= (width / 2)) ||
-  //   (this.offset.x >= field.x - width && this.x >= (width / 2))
-  // ) {
-  //   this.x += this.dx;
-  // } else {
-  //   this.offset.x += this.dx;
-  // }
-  // if ((this.offset.y <= 0 && this.y <= (height / 2)) ||
-  //   (this.offset.y >= field.y - height && this.y >= (height / 2))
-  // ) {
-  //   this.y += this.dy;
-  // } else {
-  //   this.offset.y += this.dy;
-  // }
-  // // Check for wraparound
-  // if (this.x < -(this.w/2)) {
-  //   this.x = width + (this.w/2);
-  //   this.offset.x = field.x - width;
-  // } else if (this.x > width + (this.w/2)) {
-  //   this.x = -(this.w/2);
-  //   this.offset.x = 0;
-  // }
-  // if (this.y < -(this.h/2)) {
-  //   this.y = height + (this.h/2);
-  //   this.offset.y = field.y - height;
-  // } else if (this.y > height + (this.h/2)) {
-  //   this.y = -(this.h/2);
-  //   this.offset.y = 0;
-  // }
+  if (this.x < width/2) {
+    this.offset.x += this.dx;
+  } else if (this.x > field.x - width/2) {
+    this.offset.x += this.dx;
+  } else if (this.offset.x) {
+    this.offset.x = 0;
+  }
+
+  if (this.y < height/2) {
+    this.offset.y += this.dy;
+  } else if (this.y > field.y - height/2) {
+    this.offset.y += this.dy;
+  } else if (this.offset.y) {
+    this.offset.y = 0;
+  }
 
   // There's totally friction in space.
   this.dx *= 0.98;
@@ -167,13 +179,16 @@ Player.prototype.fire = function () {
 Player.prototype.render = function () {
   context.fillStyle = 'white';
   context.font = '12px Arial';
+  var playerX = width/2 + this.offset.x;
+  var playerY = height/2 + this.offset.y;
   var title = this.exploded ? '☠ ' + this.name + ' ☠' : this.name;
   var w = context.measureText(title).width;
-  context.fillText(title, width/2 - (w/2), (height/2) + this.h);
+  context.fillText(title, playerX - (w/2), playerY + this.h);
   if (this.exploded) { return; }
   context.save();
   // context.translate(this.x, this.y);
-  context.translate(width/2, height/2);
+  context.translate(playerX, playerY);
+  // 0.055 adjustment rotates image 180 degrees
   context.rotate(-(this.angle + 0.055) * (180/Math.PI));
   context.drawImage(this.img, -this.w/2, -this.h/2);
   context.restore();

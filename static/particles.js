@@ -32,22 +32,11 @@ Particle.prototype.update = function() {
   this.y += this.dy;
 
   this.life -= this.decay;
-
-  // Check for wraparound
-  if (this.x < -36) {
-    this.x = width + 36;
-  } else if (this.x > width + 36) {
-    this.x = -36;
-  }
-  if (this.y < -36) {
-    this.y = height + 36;
-  } else if (this.y > height + 36) {
-    this.y = -36;
-  }
 };
 Particle.prototype.render = function() {
   context.globalAlpha = (this.life + (0.01/Math.log(this.life) + 1)) / 2;
-  context.drawImage(this.img, this.x, this.y);
+  var coords = convertToCoords(this.x, this.y);
+  context.drawImage(this.img, coords.x, coords.y);
 };
 Particle.prototype.destroyed = function () {
   return this.life < 0;

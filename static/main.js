@@ -4,8 +4,8 @@ var name;
 var socket = io.connect(document.location.href);
 
 var canvas = document.getElementById('canvas'),
-  height = canvas.height = 700,
-  width = canvas.width = 960,
+  height = canvas.height = canvas.clientHeight,
+  width = canvas.width = canvas.clientWidth,
   context = canvas.getContext('2d'),
   dtime = Date.now(),
   timing = 1000,
@@ -23,8 +23,21 @@ var playerBullets = new CanvasCollection(Particle);
 var scoreboard = new Scoreboard();
 var thisPlayer;
 
-for (var i = 0; i < 150; i++) {
-  stars.create();
+function convertToCoords (x, y) {
+  if (!thisPlayer) { return [x, y]; }
+  var modX = 0, modY = 0;
+  if (thisPlayer.offset.x > 0) {
+    modX = thisPlayer.offset.x;
+  }
+  if (thisPlayer.offset.y > 0) {
+    modY = thisPlayer.offset.y;
+  }
+  var offsetX = Math.max((thisPlayer.x - modX) - (width / 2), 0);
+  var offsetY = Math.max((thisPlayer.y - modY) - (height / 2), 0);
+  return {
+    x: x - offsetX,
+    y: y - offsetY
+  };
 }
 
 // http://stackoverflow.com/a/8916697/1216976
@@ -141,6 +154,9 @@ socket.on('join', function (data) {
 socket.on('init', function (data) {
   field.x = data.gameX;
   field.y = data.gameY;
+  for (var i = 0; i < 150; i++) {
+  stars.create();
+}
 });
 socket.on('exploded', function (data) {
   if (data.name === name) {

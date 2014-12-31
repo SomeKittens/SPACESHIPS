@@ -11,8 +11,8 @@ app.use(express.static(__dirname + '/static'));
 var consts = {
   fps: 60,
   shipSize: 36,
-  width: 1500,
-  height: 1500,
+  width: 2500,
+  height: 2500,
   bulletSize: 7
 };
 
