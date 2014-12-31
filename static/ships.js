@@ -1,6 +1,6 @@
 function Player() {
-  this.x = (Math.random() * (field.x)| 0);
-  this.y = (Math.random() * (field.y)| 0);
+  this.x = (Math.random() * (field.x - width)| 0) + width/2;
+  this.y = (Math.random() * (field.y - height)| 0) + height/2;
 
   this.offset = {
     x: 0,
