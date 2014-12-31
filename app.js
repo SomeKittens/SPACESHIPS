@@ -59,7 +59,7 @@ app.io.route('heartbeat', function(req) {
   players[req.data.name].dy = req.data.dy;
   players[req.data.name].angle = req.data.angle;
 
-  if (req.data.exploded) { return; }
+  if (req.data.exploded || players[req.data.name].exploded) { return; }
 
   // Collision check
   Object.keys(players).forEach(function(key) {
