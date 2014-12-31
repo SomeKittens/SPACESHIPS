@@ -57,23 +57,23 @@ document.body.addEventListener('keyup', function(e) {
 });
 
 var respawnMessageFlasher = (function () {
-    var title = document.querySelector('title');
-    var timeout;
+  var title = document.querySelector('title');
+  var timeout;
 
-    return function (pilot) {
-        clearTimeout(timeout);
+  return function (pilot) {
+    clearTimeout(timeout);
 
-        var count = 6;
-        var messages = [pilot.name + ' just respawned!', 'SPACESHIPS!'];
-        var blink = function () {
-            title.innerHTML = messages[count % 2];
-            if (count > 1) {
-                timeout = setTimeout(blink, 500);
-            }
-            count -= 1;
-        };
-        blink();
+    var count = 6;
+    var messages = [pilot.name + ' just respawned!', 'SPACESHIPS!'];
+    var blink = function () {
+        title.innerHTML = messages[count % 2];
+        if (count > 1) {
+          timeout = setTimeout(blink, 500);
+        }
+        count -= 1;
     };
+    blink();
+  };
 })();
 
 document.querySelector('form').addEventListener('submit', function(e) {
