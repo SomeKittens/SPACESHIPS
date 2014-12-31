@@ -198,7 +198,6 @@ function FBPlayer (params) {
   this.x = params.x;
   this.y = params.y;
   this.angle = params.angle;
-  this.offset = params.offset;
 
   this.name = params.name;
 
@@ -250,18 +249,15 @@ FBPlayer.prototype.destroyed = function () {
 };
 
 FBPlayer.prototype.render = function () {
-  var resolved = {
-    x: this.x + this.offset.x,
-    y: this.y + this.offset.y
-  };
+  var coords = convertToCoords(this.x, this.y);
   context.fillStyle = 'white';
   context.font = '12px Arial';
   var title = this.exploded ? '☠ ' + this.name + ' ☠' : this.name;
   var w = context.measureText(title).width;
-  context.fillText(title, resolved.x - (w/2), resolved.y + this.h);
+  context.fillText(title, coords.x - (w/2), coords.y + this.h);
   if (this.exploded) { return; }
   context.save();
-  context.translate(resolved.x, resolved.y);
+  context.translate(coords.x, coords.y);
   context.rotate(-(this.angle + 0.055) * (180/Math.PI));
   context.drawImage(this.img, -this.w/2, -this.h/2);
   context.restore();
