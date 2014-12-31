@@ -7,7 +7,8 @@ function Star() {
       context = canvas.getContext('2d');
     canvas.height = canvas.width = 10;
     context.beginPath();
-    context.arc(2, 2, 2, 0, 2 * Math.PI, false);
+    var radius = Math.random() * 3 |0;
+    context.arc(2, 2, radius, 0, 2 * Math.PI, false);
     context.fillStyle = 'white';
     context.fill();
     context.closePath();

@@ -155,8 +155,8 @@ socket.on('init', function (data) {
   field.x = data.gameX;
   field.y = data.gameY;
   for (var i = 0; i < 150; i++) {
-  stars.create();
-}
+    stars.create();
+  }
 });
 socket.on('exploded', function (data) {
   if (data.name === name) {
