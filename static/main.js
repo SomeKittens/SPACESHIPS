@@ -17,6 +17,7 @@ var field = {};
 var nameInput = document.querySelector('[name="name"]');
 
 var stars = new CanvasCollection(Star);
+var planets = new CanvasCollection(Planet);
 var players = new CanvasCollection(FBPlayer);
 var particles = new CanvasCollection(Particle, 1000);
 var playerBullets = new CanvasCollection(Particle);
@@ -107,6 +108,7 @@ document.querySelector('form').addEventListener('submit', function(e) {
 function run() {
   context.clearRect(0, 0, width, height);
   stars.render();
+  planets.render();
   players.render();
   if (thisPlayer) {
     thisPlayer.render();
@@ -124,6 +126,7 @@ function run() {
 // This will continue running onblur
 setInterval(function() {
   stars.update();
+  planets.update();
   if (thisPlayer) {
     thisPlayer.update();
   }
@@ -133,6 +136,7 @@ setInterval(function() {
   players.update();
 
   stars.gc();
+  planets.gc();
   particles.gc();
   playerBullets.gc();
   players.gc();
@@ -156,6 +160,9 @@ socket.on('init', function (data) {
   field.y = data.gameY;
   for (var i = 0; i < 150; i++) {
     stars.create();
+  }
+  for (var j = 0; j < 4; j++) {
+    planets.create();
   }
 });
 socket.on('exploded', function (data) {

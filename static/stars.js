@@ -16,4 +16,20 @@ function Star() {
   })();
 }
 
+function Planet() {
+  this.x = (Math.random() * (field.x)| 0);
+  this.y = (Math.random() * (field.y)| 0);
+
+  var img = new Image();
+  img.onload = function () {
+    var r = Math.random() * 255 | 0,
+      g = Math.random() * 255 | 0,
+      b = Math.random() * 255 | 0;
+    this.img = colorImage(img, r, g, b, 64);
+  }.bind(this);
+  img.src = '/img/gas.png';
+  this.img = document.createElement('canvas');
+}
+
 inherits(Star, CanvasItem);
+inherits(Planet, CanvasItem);

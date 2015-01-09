@@ -69,3 +69,26 @@ CanvasCollection.prototype = {
     }
   }
 };
+
+function colorImage (img, r, g, b, x, y) {
+  if (!y) { y = x; }
+  var canvas = document.createElement('canvas'),
+    context = canvas.getContext('2d');
+  canvas.height = y;
+  canvas.width = x;
+
+  context.drawImage(img, 0, 0);
+
+  var imgData = context.getImageData(0, 0, x, y);
+
+  // For loop incrementing by 4 is easier than forEach
+  for (var i = 0; i < imgData.data.length; i += 4) {
+    if (imgData.data[i + 3] === 0) { continue; }
+    imgData.data[i + 0] = Math.floor(r * imgData.data[i + 0] / 255);
+    imgData.data[i + 1] = Math.floor(g * imgData.data[i + 1] / 255);
+    imgData.data[i + 2] = Math.floor(b * imgData.data[i + 2] / 255);
+  }
+  context.putImageData(imgData, 0, 0);
+
+  return canvas;
+}

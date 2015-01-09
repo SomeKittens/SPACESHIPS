@@ -29,7 +29,7 @@ function Player() {
 
   this.img = new Image();
   // this.img.src = 'http://retroships.com/generate.png?&size=3&cB=300&seed=' + name;
-  this.img.src = '/player.png';
+  this.img.src = '/img/player.png';
 }
 
 inherits(Player, CanvasItem);
@@ -112,8 +112,8 @@ Player.prototype.update = function () {
   }
 
   // There's totally friction in space.
-  this.dx *= 0.98;
-  this.dy *= 0.98;
+  this.dx *= 0.99;
+  this.dy *= 0.99;
 
   var radians = (this.angle + 0.055) * (180/Math.PI);
 
