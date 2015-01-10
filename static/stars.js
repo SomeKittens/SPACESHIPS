@@ -23,8 +23,8 @@ function Planet() {
   var img = new Image();
   img.onload = function () {
     var r = Math.random() * 255 | 0,
-      g = Math.random() * 255 | 0,
-      b = Math.random() * 255 | 0;
+        g = Math.random() * 255 | 0,
+        b = Math.random() * 255 | 0;
     this.img = colorImage(img, r, g, b, 64);
   }.bind(this);
   img.src = '/img/gas.png';
