@@ -3,6 +3,7 @@
 var express = require('express.io');
 var Quadtree = require('./quadtree');
 var Scores = require('./scores');
+var AI = require('./ai');
 var app = express();
 app.http().io();
 
@@ -37,10 +38,12 @@ app.io.route('reset', function (req) {
   players[req.data.name].exploded = false;
 });
 
-var playerInit = function (req) {
+var playerInit = function (req, ai) {
   players[req.data.name] = req.data;
-  scores.addPlayer(req.data.name);
-  app.io.broadcast('score', scores.toSortedArray());
+  if (!ai) {
+    scores.addPlayer(req.data.name);
+    app.io.broadcast('score', scores.toSortedArray());
+  }
 };
 
 app.io.route('join', function(req) {
@@ -103,6 +106,17 @@ var tickLengthMs = 1000 / consts.fps;
 var previousTick = Date.now();
 var actualTicks = 0;
 var tickCollection = [];
+var ai = new AI(1000, 1000, consts);
+var heartbeat;
+
+playerInit({
+  data: ai.getData()
+});
+function aiSpawn () {
+  ai.x = Math.random() * consts.width | 0;
+  ai.y = Math.random() * consts.height | 0;
+  ai.exploded = false;
+}
 
 var gameLoop = function () {
   var now = Date.now();
@@ -110,6 +124,14 @@ var gameLoop = function () {
 
   if (previousTick + tickLengthMs <= now) {
     previousTick = now;
+
+    // ai stuff
+    heartbeat = !heartbeat;
+    if (heartbeat) {
+      app.io.broadcast('heartbeat', ai.getData());
+    }
+
+    ai.update(players);
 
     var quadtree = new Quadtree({
       x: 0,
@@ -162,7 +184,12 @@ var gameLoop = function () {
         console.log(playerKey, 'was hit', hit);
         scores.scorePoint(hit.owner);
         console.log(scores.toSortedArray());
-        players[playerKey].exploded = true;
+        if (players[playerKey].name = 'ai') {
+          ai.exploded = true;
+          setTimeout(aiSpawn, 2000);
+        } else {
+          players[playerKey].exploded = true;
+        }
         app.io.broadcast('score', scores.toSortedArray());
         app.io.broadcast('exploded', {
           name: playerKey

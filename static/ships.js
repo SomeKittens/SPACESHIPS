@@ -186,7 +186,6 @@ Player.prototype.render = function () {
   context.fillText(title, playerX - (w/2), playerY + this.h);
   if (this.exploded) { return; }
   context.save();
-  // context.translate(this.x, this.y);
   context.translate(playerX, playerY);
   // 0.055 adjustment rotates image 180 degrees
   context.rotate(-(this.angle + 0.055) * (180/Math.PI));

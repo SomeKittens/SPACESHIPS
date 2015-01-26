@@ -184,6 +184,7 @@ socket.on('reset', function (data) {
 });
 
 socket.on('heartbeat', function (data) {
+  console.log(data);
   if (!fbPlayers[data.name]) {
     fbPlayers[data.name] = players.create(data);
     return;
