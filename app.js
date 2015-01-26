@@ -106,12 +106,15 @@ var tickLengthMs = 1000 / consts.fps;
 var previousTick = Date.now();
 var actualTicks = 0;
 var tickCollection = [];
-var ai = new AI(1000, 1000, consts);
+var ais = [new AI(consts)];
 var heartbeat;
 
-playerInit({
-  data: ai.getData()
+ais.forEach(function(ai) {
+  playerInit({
+    data: ai.getData()
+  });
 });
+
 function aiSpawn () {
   ai.x = Math.random() * consts.width | 0;
   ai.y = Math.random() * consts.height | 0;
@@ -128,10 +131,13 @@ var gameLoop = function () {
     // ai stuff
     heartbeat = !heartbeat;
     if (heartbeat) {
-      app.io.broadcast('heartbeat', ai.getData());
+      ais.forEach(function(ai) {
+        app.io.broadcast('heartbeat', ai.getData());
+      });
     }
-
-    ai.update(players);
+    ais.forEach(function(ai) {
+      ai.update(players);
+    });
 
     var quadtree = new Quadtree({
       x: 0,
@@ -186,7 +192,6 @@ var gameLoop = function () {
         console.log(scores.toSortedArray());
         if (players[playerKey].name = 'ai') {
           ai.exploded = true;
-          setTimeout(aiSpawn, 2000);
         } else {
           players[playerKey].exploded = true;
         }
